@@ -1,0 +1,68 @@
+a: 1+2
+x: null
+b: (2 - 3) + 1 - 2 / 2
+c: a + b
+d: b + c
+e: a + b + c
+g: a = b
+y: x + 2
+
+ternary: if y = 2 then null else 10
+
+j: a = g // TYPE ERROR
+d: // DUPLICATE KEY ERROR
+dx: dy //
+dy: dx + 2 // CIRCULAR REFERENCE ERROR
+
+
+var script = ^^;
+
+class CSharp {
+	decimal a {get; set;}
+	decimal? x {get; set;}
+	decimal b {get; set;}
+	decimal c {get; set;}
+	decimal d {get; set;}
+	decimal e {get; set;}
+	bool g {get; set;}
+	decimal {get; set;}
+	decimal? ternary {get; set;}
+}
+
+var input = new CSharp {
+	a= null,
+	x= 3,
+	b= null,
+	c= null,
+	d= null,
+	e= null,
+	g= null,
+	y= null,
+	ternary= null
+};
+
+CSharp output = compute(script, input);
+var isValid = validate(script);
+
+
+const script = ^^;
+let jsInput = {
+	a: null
+	x: 3
+	b: null
+	c: null
+	d: null
+	e: null
+	g: null
+	y: null
+	ternary: null
+};
+let output = compute(script, jsInput);
+
+OR
+
+let isValid = validate(script);
+
+
+// what should it do if inside the model you provide conflicting value?
+// overwrite IT !!!
