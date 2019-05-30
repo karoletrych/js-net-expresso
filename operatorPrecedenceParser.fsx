@@ -15,7 +15,7 @@ type Expression =
     | Token of char
     | Binary of Expression * char * Expression
 
-let parseExpression (tokenReader : TokenReader) : Expression =
+let parseExpression tokenParser (tokenReader : TokenReader) : Expression =
     let rec parseExpression1 (lhs : Expression, minPrecedence) =
         let mutable lhs = lhs
         let isBinaryOperator op = 

@@ -7,9 +7,12 @@ type ParserResult<'a> =
 
 type Parser<'a> = Parser of (string -> ParserResult<'a * string>)
 
-// let parser x : Parser =
 
-let pChar char =
+let run parser input = 
+    let (Parser innerFn) = parser
+    innerFn input
+
+let pchar char =
     let innerFn input =
         if String.IsNullOrEmpty(input) then 
             Failure "No more input"
@@ -24,7 +27,38 @@ let pChar char =
     Parser innerFn        
 
 
+let andThen parser1 parser2 =
+    let innerFn input =
+        let result1 = run parser1 input
+        match result1 with
+        | Failure err -> 
+            Failure err  
+        | Success (value1,remaining1) -> 
+            let result2 =  run parser2 remaining1
+            match result2 with 
+            | Failure err ->
+                Failure err 
+            | Success (value2,remaining2) -> 
+                let newValue = (value1,value2)
+                Success (newValue,remaining2)
+    Parser innerFn 
 
-let run parser input = 
-    let (Parser innerFn) = parser
-    innerFn input
+let ( .>>. ) = andThen
+
+
+let orElse parser1 parser2 =
+    let innerFn input =
+        let result1 = run parser1 input
+        match result1 with
+        | Success result -> 
+            result1
+        | Failure err -> 
+            let result2 = run parser2 input
+            result2 
+
+    Parser innerFn 
+
+let ( <|> ) = orElse
+
+let choice listOfParsers = 
+    List.reduce ( <|> ) listOfParsers 
